@@ -19,6 +19,65 @@ public:
         return ans;
     }
 };
-问题1：是否有必要判断数组nums小于0的情况，返回值-1存在问题
-问题2：sort函数用法存在问题（复习sort函数的用法）
-sort函数可以对数组、链表进行排序
+问题1：是否有必要判断数组nums小于0的情况，返回值-1的形式存在问题
+问题2：sort函数用法存在问题（复习sort函数的用法，参考文章：https://shengyu7697.github.io/std-sort/）
+答：sort函数可以对数组、链表进行排序，如何使用sort函数对vector进行排序，例如：vector<int>v,std::sort(v.begin(),v.end());
+     使用规则：sort函数默认是升序，也可以自定义进行降序；同时使用sort函数记得需要包含头文件#include<algorithm>;
+     1.1 数组升序：std::sort(begin, end, less<Type>()); 数组降序：std::sort(begin, end, greater<Type>());
+     1.2 vector排序,使用自定义函数进行降序排列,
+         bool myCompare(int a,int b){return a>b;}
+         sort(v.begin(),v.end(),myCompare);
+    疑问点1：为什么自定义函数的返回类型要写成bool类型，不能写成int，返回的值不是一个具体的数吗？
+      sort函数中的第三位是一个函数指针，指向自定义的比较函数，这个比较函数必须返回布尔类型的值，以表示两个元素之间的相对顺序，return a>b 意思
+      是比较a与b的值，a大于b则函数为“1”代表“true”,进行降序排序，如果需要升序排列，应改为 return a<b 此时a<b满足时，返回“true”。
+    疑问点2：为什么sort函数中使用自定义函数myCompare没有“()”括号
+        因为上述myCompare是一个函数指针，不是函数调用，在 C++ 中，函数的名称（没有括号和参数）会自动转换为指向该函数的指针。
+     1.3 vector排序,使用Lambda匿名函数进行升序排列，升序排列：std:sort(v,begin(),v.end(),[](int a,int b){return a<b;})
+        1.3.1 复习Lambda匿名函数用法（参考文章：https://www.cnblogs.com/pzhfei/archive/2013/01/14/lambda_expression.html）
+               Lambda表达式如下：[capture](parameters)->return-type{body} 
+    如果没有参数,空的圆括号()可以省略.返回值也可以省略,如果函数体只由一条return语句组成或返回类型为void的话.形如:[capture](parameters){body}
+（3）暴力解法修改代码如下AC：class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        if(nums.size()<=0)
+        {
+            return {};
+        }
+        vector<int>ans;
+        for(int i=0;i<nums.size();i++)
+        {
+            ans.push_back(nums[i]*nums[i]);
+        }
+        sort(ans.begin(),ans.end());
+        return ans;
+    }
+};
+（4）双指针解法
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        
+        int k=nums.size()-1;
+        vector<int>ans(nums.size(),0);
+        for(int left=0, right=nums.size()-1;left<=right;)
+        {
+            if(nums[left]*nums[left]>nums[right]*nums[right])
+            {
+                ans[k--]=nums[left]*nums[left];
+                left++;
+            }
+            else 
+            {
+                ans[k--]=nums[right]*nums[right];
+                right--;
+            }
+        }
+        return ans;
+    }
+};
+2、209.长度最小的子数组 
+题目链接：https://leetcode.cn/problems/minimum-size-subarray-sum/
+（1）第一次见到题目的思路
+3、59.螺旋矩阵II 
+题目链接：https://leetcode.cn/problems/spiral-matrix-ii/
+（1）第一次见到题目的思路
