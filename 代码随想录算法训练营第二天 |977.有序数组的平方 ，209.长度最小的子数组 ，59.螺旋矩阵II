@@ -1,0 +1,24 @@
+代码随想录算法训练营第一天 |数组part02.977.有序数组的平方 ，209.长度最小的子数组 ，59.螺旋矩阵II 
+1、977.有序数组的平方
+题目链接：https://leetcode.cn/problems/squares-of-a-sorted-array/
+（1）看到题目的第一想法：暴力法，for循环求出每一个数字的平方后，放在新数组中
+（2）初次尝试暴力代码
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        if(nums.size()<=0)
+        {
+            return -1;
+        }
+        vector<int>ans;
+        for(int i=0;i<nums.size();i++)
+        {
+            ans.push_back(nums[i]*nums[i]);
+        }
+        ans.sort();
+        return ans;
+    }
+};
+问题1：是否有必要判断数组nums小于0的情况，返回值-1存在问题
+问题2：sort函数用法存在问题（复习sort函数的用法）
+sort函数可以对数组、链表进行排序
