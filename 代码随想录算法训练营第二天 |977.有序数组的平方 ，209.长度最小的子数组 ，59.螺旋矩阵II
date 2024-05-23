@@ -77,7 +77,89 @@ public:
 };
 2、209.长度最小的子数组 
 题目链接：https://leetcode.cn/problems/minimum-size-subarray-sum/
-（1）第一次见到题目的思路
+（1）第一次见到题目的思路：第一想法用滑动窗口做
+（2）复习滑动窗口框架（学习文章链接：https://labuladong.online/algo/essential-technique/sliding-window-framework-2/#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88）
+void slidingWindow(string s)
+{
+     unordered_map<char,int>window;
+     int left=0;
+     int right=0;
+     while(right<s.size())
+     {
+      char c=s[right]
+      window.add(c);
+        right++; //增大窗口
+     ....更新窗口增大的操作
+      while(left<right&&window needs shrink)//判断是否需要缩小窗口
+        {
+         char d=s[left];
+         window.remove(d);
+         left++;//缩小窗口
+          ....进行窗口的更新
+        }
+     }
+}
+(3)滑动窗口解法
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {       
+        int left=0,right=0;
+        int sum=0;//子序列的和
+        int ans=INT_MAX;
+        while(right<nums.size())
+        {
+            sum +=nums[right];
+           while(sum-nums[left]>=target)
+           {
+             sum -=nums[left];
+             left++;
+           }
+           if(sum>=target)
+           {
+            ans=min(ans,right-left+1);
+           }
+           right++;
+        }
+        return ans<=nums.size() ?ans:0;
+    }
+};
 3、59.螺旋矩阵II 
 题目链接：https://leetcode.cn/problems/spiral-matrix-ii/
-（1）第一次见到题目的思路
+（1）第一次见到题目的思路：无思路
+（2）学习题解（文章讲解：https://programmercarl.com/0059.%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5II.html）
+（3）学习别人的解法
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        int left=0,right=n-1,top=0,bottom=n-1;
+        vector<vector<int>>ans(n,vector<int>(n,0));
+        int num=1,target=n*n;
+        while(num<=target)
+        {
+            for(int i=left;i<=right;i++)
+            {
+                ans[top][i]=num++;        //从左到右 顶部
+            }
+            top++;
+            for(int i=top;i<=bottom;i++)
+            {
+                ans[i][right]=num++;       //从上到下 右部
+            }
+            right--;
+            for(int i=right;i>=left;i--)
+            {
+                ans[bottom][i]=num++;      //从右到左 下部
+            }
+            bottom--;
+            for(int i=bottom;i>=top;i--)
+            {
+                ans[i][left]=num++;        //从底到上 左部
+            }
+            left++;
+        }
+        return ans;
+    }
+};
+（4）复习矩阵相关
+vector<vector<int>> matrix(n, vector<int>(n, 0)); 是正确的用法，用来创建一个 n x n 的矩阵，并初始化所有元素为 0。
+vector<vector<int>> matrix(n, 0); 是错误的用法，因为 0 不是 vector<int> 类型。
