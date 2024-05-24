@@ -1,0 +1,170 @@
+链表理论基础 ● 203.移除链表元素 ● 707.设计链表 ● 206.反转链表
+1、链表理论基础（文章链接：https://www.hello-algo.com/chapter_array_and_linkedlist/linked_list/）
+链表（linked list）是一种线性的数据结构，其中的每个元素都是一个节点对象，各节点通过“引用”相连接（在 C、C++、Go 和 Rust 等支持指针的语言中，“引用”应被替换为“指针”）
+链表结构体如下：
+struct ListNode
+{
+     int val;                                  // 节点值
+     ListNode *next;                           // 指向下一节点的指针
+     ListNode(int x):val(x),next(nullptr){}    // 构造函数
+}
+2、203.移除链表元素
+(1)复习如何使用虚拟节点dummynode
+ListNode* dummy = new ListNode(-1), *p = dummy;
+当你需要创造一条新链表的时候，可以使用虚拟头结点简化边界情况的处理。
+(2)初次尝试代码
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode *dummy=new ListNode(-1);
+        ListNode *cur=head;
+        while(cur->next!=nullptr)
+        {
+            if(cur->val==val)
+            {
+                cur->next=cur->next->next;
+            }
+            else
+            {
+                cur=cur->next;
+            }
+        }
+        return head;
+    }
+};
+问题1:没有合理使用dummy节点处理头结点如果被删除的情况
+问题2：使用完dummy节点，需要及时清理，不然会造成内存泄漏
+(3)AC的代码
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode *dummy=new ListNode(-1);
+        dummy->next=head;
+        ListNode *cur=dummy;
+        while(cur->next!=nullptr)
+        {
+            if(cur->next->val==val)
+            {
+                ListNode *temp=cur->next;
+                cur->next=cur->next->next;
+                delete temp;
+            }
+            else
+            {
+                cur=cur->next;
+            }
+        }
+        ListNode *newhead=dummy->next;
+        delete dummy;
+        return newhead;
+    }
+};
+（4）除了头结点，链表的节点移除都是通过前一个节点来移除当前节点，而头结点没有前一个节点，所以需要特殊考虑（dummy虚拟节点）
+2、707.设计链表
+（1）class MyLinkedList {
+public:
+    struct ListNode
+    {
+        int val;
+        ListNode *next;
+        ListNode(int x):val(x),next(nullptr) { }
+   };
+    MyLinkedList() {
+         dummy=new ListNode(0);      
+         number=0;
+    }
+    
+    int get(int index) {
+        ListNode *cur=dummy->next;//错误写法ListNode *cur=dummy
+        if(index>=number||index<0)
+        {
+            return -1;
+        }
+        while(index--)
+        {
+            cur=cur->next;
+        }
+        return cur->val;
+    }
+    
+    void addAtHead(int val) {
+        ListNode *newNode=new ListNode(val);
+        newNode->next=dummy->next;
+        dummy->next=newNode;
+        number++;
+    }
+    
+    void addAtTail(int val) {
+        ListNode *newNode=new ListNode(val);
+        ListNode *cur=dummy;
+        while(cur->next!=nullptr)
+        {
+            cur=cur->next;
+        }
+            cur->next=newNode;
+            number++;
+    }
+    
+    void addAtIndex(int index, int val) {
+        if(index>number) return ;
+        if(index<0)index=0;
+        ListNode *newNode=new ListNode(val);
+        ListNode *cur=dummy;
+        while(index--)
+        {
+            cur=cur->next;
+        }
+        newNode->next=cur->next;
+        cur->next=newNode;
+        number++;
+    }
+    
+    void deleteAtIndex(int index) {
+        if(index>=number||index<0)
+        {
+            return ;
+        }
+        ListNode *cur=dummy;
+        while(index--)
+        {
+            cur=cur->next;
+        }
+        ListNode *temp=cur->next;
+        cur->next=cur->next->next;
+        delete temp;
+        
+        number--;
+    }
+private:
+    int number;
+    ListNode *dummy;
+};
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList* obj = new MyLinkedList();
+ * int param_1 = obj->get(index);
+ * obj->addAtHead(val);
+ * obj->addAtTail(val);
+ * obj->addAtIndex(index,val);
+ * obj->deleteAtIndex(index);
+ */
+3、206.反转链表
+（1）看到题目的思路：使用虚拟头结点？--思路错了
+（2）使用双指针和递归的解法
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode *cur=head;
+        ListNode *pre=nullptr;
+        while(cur!=nullptr)
+        {
+            ListNode *temp=cur->next;
+            cur->next=pre;
+            pre=cur;
+            cur=temp;
+        }
+        ListNode *newcode=pre;
+        return newcode;
+    }
+};
