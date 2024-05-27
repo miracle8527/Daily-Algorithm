@@ -1,0 +1,33 @@
+● 24. 两两交换链表中的节点    ● 19.删除链表的倒数第N个节点   ● 面试题 02.07. 链表相交    ● 142.环形链表II      ● 总结
+1、24. 两两交换链表中的节点
+（1）题目链接：https://leetcode.cn/problems/swap-nodes-in-pairs/
+（2）见到题目的思路：既然题目说的是两两交换链表的节点，是不是可以两两分成一组进行交换；题目要求只交换节点值不交换，是不是要重点考虑链表的指向（指针）
+ (3)重点是理清pre、cur、cur->next三个节点如何交换，以及需要创建虚拟头结点
+（4）代码
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+    ListNode *dummynode=new ListNode(-1);
+     dummynode->next=head;
+     ListNode *pre=dummynode;
+     while(pre->next!=nullptr&&pre->next->next!=nullptr)
+     {
+            ListNode *cur=pre->next;
+            ListNode *next=cur->next;
+            ListNode *nextNext=next->next;
+
+
+            pre->next=next;
+            next->next=cur;
+            cur->next=nextNext;
+
+            pre=cur; //前进一步
+     } 
+     ListNode *newCode=dummynode->next;
+     delete dummynode;
+     return newCode;
+    }
+};
+（5）拓展：考虑使用递归法如何做
+2、19.删除链表的倒数第N个节点
+（1）
