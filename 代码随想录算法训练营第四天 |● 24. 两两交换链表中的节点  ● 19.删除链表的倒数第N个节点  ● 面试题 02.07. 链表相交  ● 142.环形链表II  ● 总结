@@ -30,4 +30,77 @@ public:
 };
 （5）拓展：考虑使用递归法如何做
 2、19.删除链表的倒数第N个节点
-（1）
+（1）题目链接：https://leetcode.cn/problems/remove-nth-node-from-end-of-list/description/
+（2）双指针，删除倒数第N个节点,引入虚拟头结点，先让fast移动n+1，然后fast和slow同时移动n（此时slow在想要删除的节点的前一个位置），
+然后删除第n个节点（slow->next=slow->next->next;），返回即可。
+（3）class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *dummynode=new ListNode(-1);
+        dummynode->next=head;
+        ListNode *slow=dummynode;
+        ListNode *fast=dummynode;
+        while(n--&&fast!=nullptr)
+        {
+            fast=fast->next;
+        }
+        fast=fast->next;
+        while(fast!=nullptr)
+        {
+            slow=slow->next;
+            fast=fast->next;
+        }
+        slow->next=slow->next->next;
+         return dummynode->next;
+    }
+};
+3、面试题 02.07. 链表相交 
+（1）题目链接：https://leetcode.cn/problems/intersection-of-two-linked-lists-lcci/description/
+（2）看到一种很巧妙的解题思路，既然A与B两者相交，则先从A走完，再从B走到相交节点(a+(b-c))，与先从B走完，再从A走到相交节点的路程应是相等的(b+(a-c))。
+思路链接：https://leetcode.cn/problems/intersection-of-two-linked-lists-lcci/solutions/1190240/mian-shi-ti-0207-lian-biao-xiang-jiao-sh-b8hn/
+（3）class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if(headA==NULL||headB==NULL)
+        {
+            return NULL;
+        }
+        ListNode *A=headA;
+        ListNode *B=headB;
+
+        while(A!=B)
+        {
+            A=(A!=NULL)?A->next:headB;
+            B=(B!=NULL)?B->next:headA;          
+        } 
+        return A;
+    }
+};
+4、142.环形链表II 
+（1）题目链接:https://leetcode.cn/problems/linked-list-cycle-ii/description/
+（2）先确定链表中是否有环，如果有，则找到入环的第一个节点，如果没有，则返回NULL
+（3）共有两轮相遇，fast比slow指针想要相遇，一定是多走n倍的环数
+（4）class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *fast,*slow;
+        fast=slow=head;
+        while(fast!=NULL&&fast->next!=NULL)
+        {
+            fast=fast->next->next;
+            slow=slow->next;
+            if(fast==slow) break;
+        }
+        if(fast==NULL||fast->next==NULL)
+        {
+            return NULL;
+        }
+        fast=head;
+        while(fast!=slow)
+        {
+            fast=fast->next;
+            slow=slow->next;
+        }
+        return fast;
+    }
+};
