@@ -1,0 +1,161 @@
+● 哈希表理论基础  ● 242.有效的字母异位词    ● 349. 两个数组的交集   ● 202. 快乐数  ● 1. 两数之和
+1、哈希表（散列表 hash table）理论基础
+   文章链接：https://programmercarl.com/%E5%93%88%E5%B8%8C%E8%A1%A8%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80.html
+（1）什么时候想到用哈希法：当我们遇到了要快速判断一个元素是否出现集合里的时候，就要考虑哈希法。
+（2）哈希碰撞如何解决：拉链法或者线性探测法
+（3）常见的三种哈希数据结构：数组、set（集合）、map（映射）
+std::unordered_set底层实现为哈希表，std::set 和std::multiset 的底层实现是红黑树，红黑树是一种平衡二叉搜索树，所以key值是有序的，但key不可以修改，改动key值会导致整棵树的错乱，所以只能删除和增加。
+std::unordered_map 底层实现为哈希表，std::map 和std::multimap 的底层实现是红黑树。同理，std::map 和std::multimap 的key也是有序的。
+2、242.有效的字母异位词 
+（1）题目链接：https://leetcode.cn/problems/valid-anagram/description/
+（2）初次尝试代码
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        unordered_map<int,int>res;
+        unordered_map<int,int>res_2;
+        for(int i=0;i<s.size();i++)
+        {
+            res.insert(s[i]);
+        }
+         for(int i=0;i<t.size();i++)
+        {
+            res_2.insert(t[i]);
+        }
+        if(s.size()==t.size())
+        {
+            for(int i=0;i<s.size();i++)
+            {
+                if(res[i]==res_2[i])
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+错误点：统计字符频率时的错误：应该使用字符 s[i] 和 t[i] 作为键，而不是索引 i。
+       比较字符频率时的错误：当前的逻辑是逐个字符比较两个频率表的对应位置，而不是比较整个频率表。
+       insert的使用错误：
+学习文章：http://www.008ct.top/blog/2019/12/14/C-STL%E4%B8%ADmap%E7%9A%84-%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%BD%BF%E7%94%A8%E6%97%B6%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9D%91/
+修改后代码
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        unordered_map<char,int>freS;
+        unordered_map<char,int>freT;
+        if(s.size()!=t.size())
+        {
+            return false;
+        }
+        for(auto c:s)
+        {
+            freS[c]++;
+        }
+        for(auto c:t)
+        {
+            freT[c]++;
+        }
+        return freS==freT;
+    }
+};
+unicode 字符：一个统一的标准，Unicode 就像一个全球性的字符词典，每个字符都有一个独特的编号（代码点）。
+3、349. 两个数组的交集
+（1）题目链接：https://leetcode.cn/problems/intersection-of-two-arrays/description/
+（2）暴力法：两次for循环
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int>vec;
+        for(int i=0;i<nums1.size();i++)
+        {
+            for(int j=0;j<nums2.size();j++)
+            {
+                if(nums1[i]==nums2[j])
+                {
+                    vec.push_back(nums1[i]);
+                }
+            }
+        }
+    std::sort(vec.begin(), vec.end());
+    auto last = std::unique(vec.begin(), vec.end());
+    vec.erase(last, vec.end());
+   return vec;
+    }
+};
+（3）拓展：在什么场景使用unordered_set，什么场景使用unordered_map
+unordered_set 用于存储不重复的元素，适用于快速查找元素是否存在；需要确保集合中的元素唯一；不需要维护元素的插入顺序或排序顺序；
+unordered_map 用于存储键值对，适合需要高效地根据键查找对应的值；需要存储并管理键值对（例如词频统计，配置信息等）；不需要维护键值对的插入顺序或排序顺序
+（4）第二种解法：使用unordered_set
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int>ans;
+        unordered_set<int>res(nums1.begin(),nums1.end());
+        for(auto c:nums2)
+        {
+            if(res.find(c)!=res.end())
+            {
+                ans.insert(c);
+            }
+        }
+        return vector<int>(ans.begin(),ans.end());
+    }
+};
+4、202. 快乐数
+（1）题目链接:https://leetcode.cn/problems/happy-number/description/
+（2）复习如何取各个位上的数值
+取模运算（%）：int a=n%10; 提取n的个位数
+取余运算（/）--除法运算：
+（3）第一种解法，使用集合--
+class Solution {
+public:
+  int getSum(int n)
+  {
+    int sum=0;
+    while(n)
+    {
+        sum+=(n%10)*(n%10);
+        n/=10;
+    }
+    return sum;
+  }
+    bool isHappy(int n) 
+    {
+        unordered_set<int>ans;
+        while(1)
+        {
+            int sum=getSum(n);
+            if(sum==1) return true;
+            if(ans.find(sum)!=ans.end()) 
+            {
+                return false;
+            }
+            else 
+            {
+                ans.insert(sum);
+            }
+            n=sum;
+        }
+    }
+};
+5、1. 两数之和
+（1）题目链接:https://leetcode.cn/problems/two-sum/description/
+（2）map键值对key-value对应的是<int,int>以及count是查找指定键是否存在在哈希表中，返回一个布尔值
+（3）class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int>hashmap;
+        for(int i=0;i<nums.size();i++)
+        {
+            int need=target-nums[i];
+            if(hashmap.count(need))
+            {
+                return vector<int>{hashmap[need],i};
+            }
+            hashmap[nums[i]]=i;
+        }
+        return vector<int>{};
+    }
+};
