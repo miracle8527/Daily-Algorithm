@@ -1,0 +1,164 @@
+● 344.反转字符串
+● 541. 反转字符串II
+● 卡码网：54.替换数字
+● 151.翻转字符串里的单词
+● 卡码网：55.右旋转字符串
+1、344.反转字符串
+（1）题目链接：https://leetcode.cn/problems/reverse-string/
+（2）class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        int left=0,right=s.size()-1;
+        while(left<right)
+        {
+            swap(s[left],s[right]);
+            left++;
+            right--;
+        }
+       // return s;
+    }
+};
+（3）偷懒解法
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        reverse(s.begin(),s.end());
+    }
+};
+2、541. 反转字符串II
+（1）题目链接：https://leetcode.cn/problems/reverse-string-ii/description/
+（2）初次尝试
+class Solution {
+public:
+    string reverseStr(string s, int k) {
+        int count=0;
+        while(count<2*k)
+        {
+               auto start = s.begin(); 
+               auto end = s.begin() + k; 
+               reverse(start, end);
+               if((s.length()-2*k)<k)
+               {
+               auto start = s.begin()+k+1; 
+               auto end = s.end(); 
+               reverse(start, end);
+               }
+               else if((s.length()-2*k)<2*k&&(s.length()-2*k)>=k)
+               {
+               auto start = s.begin()+k; 
+               auto end = s.begin()+k+k; 
+               reverse(start, end);
+               }
+        }
+        return s;
+    }
+};
+（3）class Solution {
+public:
+    string reverseStr(string s, int k) {
+        int n=s.size();
+        for(int i=0;i<n;i+=2*k)
+        {
+            int start=i;
+            int end=min(i+k,n);
+            reverse(s.begin()+start,s.begin()+end);
+        }
+        return s;
+    }
+};
+（4）重点是：int end = min(i + k, n); 与 i += 2 * k 
+3、卡码网：54.替换数字
+（1）题目链接：https://kamacoder.com/problempage.php?pid=1064
+（2）#include<iostream>
+#include<string>
+#include<cctype>
+
+using namespace std;
+
+string ChangeNumber(string s)
+{
+    for(int i=0;i<s.size();i++)
+    {
+        if(isdigit(s[i]))
+        {
+            s.replace(i,1,"number");
+            i+=5;
+        }
+    }
+    return s;
+}
+
+int main()
+{
+    string s;
+    cin>>s;
+    s=ChangeNumber(s);
+    cout<<s<<endl;
+    return 0;
+}
+（3）重点 1、s.replace(i, 1, "number"); // 替换字符为字符串 "number"
+           这个语句使用 std::string 类的 replace 方法来替换字符串 s 中的部分内容。i 是当前字符的索引。1 表示从索引 i 开始，替换 1 个字符。"number" 是用来替换的字符串。
+             i += 5; // 跳过替换后的 "number" 的长度 - 1，因为循环会增加1
+        2、是isdigit判断是否是数字
+4、151.翻转字符串里的单词
+（1）题目链接：https://leetcode.cn/problems/reverse-words-in-a-string/description/
+（2）第一步，移除多余空格 ；第二步，整个字符串反转，第三步，反转每个单词
+（3）重点是：如何将字符串中的每个单词进行单独反转
+（4）class Solution {
+public:
+    string reverseWords(string s) {
+        reverse(s.begin(), s.end());// 反转整个字符串
+        int start = 0;
+        int end = 0;
+        int n = s.length();
+        int wordStart = 0; // 用于在结果字符串中存储单词的开始位置
+        while (start < n) {
+            // 跳过空白字符
+            while (start < n && isspace(s[start])) {
+                start++;
+            }
+            // 找到单词的结束位置
+            end = start;
+            while (end < n && !isspace(s[end])) {
+                end++;
+            }
+            // 反转单词
+            if (start < end) {
+                // 反转单词并存储到前面的位置
+                reverse(s.begin() + start, s.begin() + end); 
+                if (wordStart > 0) {
+                    s[wordStart] = ' '; // 在单词之间添加一个空格
+                    wordStart++;
+                }              
+                for (int i = start; i < end; ++i) {
+                    s[wordStart] = s[i];
+                    wordStart++;
+                }
+                start = end;
+            }
+        }
+        // 去掉末尾多余的部分
+        s.erase(wordStart);
+        return s;
+    }
+};
+5、卡码网：55.右旋转字符串
+（1）题目链接：https://kamacoder.com/problempage.php?pid=1065
+（2）#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+int main()
+{
+    
+    int k;
+    cin>>k;
+    string s;
+    cin>>s;
+    
+    reverse(s.begin(),s.end());
+    reverse(s.begin(),s.begin()+k);
+    reverse(s.begin()+k,s.end());
+    cout<<s<<endl;
+    return 0;
+}
