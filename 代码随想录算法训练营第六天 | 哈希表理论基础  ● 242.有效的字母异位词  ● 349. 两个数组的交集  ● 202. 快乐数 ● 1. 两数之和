@@ -159,3 +159,32 @@ public:
         return vector<int>{};
     }
 };
+（4）暴力解法----对比学习 
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        // unordered_map<int,int>hashmap;
+        // for(int i=0;i<nums.size();i++)
+        // {
+        //     int need=target-nums[i];
+        //     if(hashmap.count(need))
+        //     {
+        //         return vector<int>{hashmap[need],i};
+        //     }
+        //     hashmap[nums[i]]=i;
+        // }
+        // return vector<int>{};
+        //
+        for(int i=0;i<nums.size();i++)
+        {
+            for(int j=0;j<i;j++)
+            {
+                if(nums[i]+nums[j]==target)
+                {
+                    return  vector<int>{i,j};
+                }
+            }
+        }
+        return vector<int>{};
+    }
+};
