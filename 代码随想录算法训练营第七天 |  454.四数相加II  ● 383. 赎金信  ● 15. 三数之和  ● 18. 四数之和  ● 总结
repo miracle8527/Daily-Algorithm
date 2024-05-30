@@ -4,5 +4,212 @@
 ● 18. 四数之和 
 ● 总结 
 1、454.四数相加II 
-（1）题目链接：
-（2）
+（1）题目链接：https://leetcode.cn/problems/4sum-ii/
+（2）暴力解法，四层for循环会超出时间限制
+（3）初次尝试使用map进行求解
+class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        int res=0;
+        unordered_map<int,int>mapp;
+        for(int i=0;i<nums1.size();i++)
+        {
+            for(int j=0;j<nums2.size();j++)
+            {
+                for(int k=0;k<nums3.size();k++)
+                {
+                    int need=0-(nums1[i]+nums2[j]+nums3[k]);
+                        if(mapp.count(need))
+                        {
+                            res++;
+                        }
+                        mapp[nums3[k]]=k;
+                }
+            }
+        }
+        return res;
+    }
+};
+（4）class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        unordered_map<int,int>mapp;
+        int res=0;
+        for(int i=0;i<nums1.size();i++)
+        {
+            for(int j=0;j<nums2.size();j++)
+            {
+               int sum=nums1[i]+nums2[j];
+                mapp[sum]++;
+            }
+        }
+
+        for(int k=0;k<nums3.size();k++)
+        {
+            for(int l=0;l<nums4.size();l++)
+            {
+                int sum2=nums3[k]+nums4[l];
+                if(mapp.count(-sum2))
+                {
+                    res+=mapp[-sum2];
+                }
+            }
+        }
+        return res;
+    }
+};
+通过 res += mapp[-sum];这行代码至关重要，我们将所有符合条件的组合数量累加到结果中。
+2、383. 赎金信 
+（1）题目链接：https://leetcode.cn/problems/ransom-note/description/
+（2）与异位词很像
+（3）初次尝试
+class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        unordered_map<char,int>freR;
+        unordered_map<char,int>freM;
+        for(auto c:magazine)
+        {
+            freM[c]++;
+        }
+        for(auto c:ransomNote)
+        {
+            freR[c]++;
+        }
+        for(int i=0;i<ransomNote.size();i++)
+        {
+            if(ransomNote[i]==magazine[i])
+            {
+                if(freR[ransomNote[i]]==freM[magazine[i]]) return true;  
+            }
+
+        }
+        return false;
+    }
+};
+问题点：代码逻辑出现错误，因为它仅在 ransomNote 和 magazine 中字符相同且频率相同时才返回 true，并且在检查时直接使用字符串索引进行对比.
+正确的逻辑应该是检查 magazine 中每个字符的数量是否足够用于构建 ransomNote。
+（4）class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        unordered_map<char,int>freR;
+        unordered_map<char,int>freM;
+        for(auto c:magazine)
+        {
+            freM[c]++;
+        }
+        for(auto c:ransomNote)
+        {
+            if(freM[c]==0){return false;}
+            freM[c]--;
+        }
+        return true;
+    }
+};
+3、15. 三数之和
+（1）题目链接：https://leetcode.cn/problems/3sum/description/
+（2）学习文章：https://juejin.cn/post/6894787422807130119
+一个方法团灭nSum的问题
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        return nSumTarget(nums,3,0,0);
+    }
+    vector<vector<int>> nSumTarget(vector<int>&nums,int n,int start,int target)
+    {
+        int sz=nums.size();
+        vector<vector<int>>res;
+        if(n<2||sz<n) return res;
+        if(n==2)
+        {
+            int lo=start,li=sz-1;
+            while(lo<li)
+            {
+                int sum=nums[lo]+nums[li];
+                int left=nums[lo],right=nums[li];
+                if(sum<target)
+                {
+                    while(lo<li&&nums[lo]==left) lo++;
+                }
+                else if(sum>target)
+                {
+                    while(lo<li&&nums[li]==right) li--;
+                }
+                else 
+                {
+                    res.push_back({left,right});
+                    while(lo<li&&nums[lo]==left) lo++;
+                    while(lo<li&&nums[li]==right) li--;
+                }
+            }
+        }
+        else
+        {
+            for(int i=start;i<sz;i++)
+            {
+                vector<vector<int>>sub=nSumTarget(nums,n-1,i+1,target-nums[i]);
+                for(vector<int>&arr:sub)
+                {
+                    arr.push_back(nums[i]);
+                    res.push_back(arr);
+                }
+                while(i<sz-1&&nums[i]==nums[i+1]) i++;
+            }
+        }
+        return res;
+    }
+};
+4、18. 四数之和 
+（1）题目链接：https://leetcode.cn/problems/4sum/description/
+（2）下面的代码在力扣测试用例中会出现整形溢出
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        sort(nums.begin(),nums.end());
+        return nSumTarget(nums,4,0,target);
+    }
+    vector<vector<int>> nSumTarget(vector<int>&nums,int n,int start,int target)
+    {
+        int sz=nums.size();
+        vector<vector<int>>res;
+        if(n<2||sz<n){return res;}
+        if(n==2)
+        {
+            int lo=start,li=sz-1;
+            while(lo<li)
+            {
+                int sum=nums[lo]+nums[li];
+                int left=nums[lo],right=nums[li];
+                if(sum>target)
+                {
+                    while(lo<li&&nums[li]==right) li--;
+                }
+                else if(sum<target)
+                {
+                    while(lo<li&&nums[lo]==left) lo++;
+                }
+                else
+                {
+                    res.push_back({left,right});
+                    while(lo<li&&nums[lo]==left) lo++;
+                    while(lo<li&&nums[li]==right) li--;
+                }
+            }
+        }
+        else 
+        {
+            for(int i=start;i<sz;i++)
+            {
+                vector<vector<int>>sub=nSumTarget(nums,n-1,i+1,target-nums[i]);
+                for(vector<int>&arr:sub)
+                {
+                    arr.push_back(nums[i]);
+                    res.push_back(arr);
+                }
+                while(i<sz-1&&nums[i]==nums[i+1]) i++;
+            }
+        }
+        return res;
+    }
+};
