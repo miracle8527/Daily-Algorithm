@@ -1,0 +1,45 @@
+●28. 实现 strStr()
+●459.重复的子字符串
+●字符串总结 
+●双指针回顾 
+
+1、28. 实现 strStr()--------一刷 KMP算法跳过
+（1）题目链接：
+（2）偷懒解法：
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+return haystack.find(needle);
+    }
+};
+（3）暴力解法
+从haystack中一个字母一个字母进行尝试与needle进行匹配，如果最后haystack字符串中存在全部的needle，则返回haystack的进行匹配的位置
+整体复杂度为 O((n−m)∗m)。空间复杂度：O(1)。
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        int s=haystack.size(),n=needle.size();
+        for(int i=0;i<=s-n;i++)
+        {
+            int j=i,k=0;
+            while(k<=n&&haystack[j]==needle[k])
+            {
+                j++;
+                k++;
+            }
+            if(n==k){return i;}
+        }
+        return -1;
+    }
+};
+（4）KMP解法----第一次遇到，暂时要求能看懂
+      文章学习：https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/solutions/575568/shua-chuan-lc-shuang-bai-po-su-jie-fa-km-tb86/
+     KMP 算法是一个快速查找匹配串的算法，它的作用其实就是本题问题：如何快速在「原字符串」中找到「匹配字符串」。第三种的暴力解法，不考虑剪枝的话复杂度是 O(m∗n) 的，而 KMP 算法的复杂度为 O(m+n)。
+KMP 之所以能够在 O(m+n) 复杂度内完成查找，是因为其能在「非完全匹配」的过程中提取到有效信息进行复用，以减少「重复匹配」的消耗。
+2、459.重复的子字符串 （一刷 KMP算法跳过）
+（1）题目链接：https://leetcode.cn/problems/repeated-substring-pattern/description/
+3、字符串总结
+（1）文章链接：https://programmercarl.com/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%80%BB%E7%BB%93.html
+4、双指针回顾
+（1）文章链接：https://programmercarl.com/%E5%8F%8C%E6%8C%87%E9%92%88%E6%80%BB%E7%BB%93.html
+
