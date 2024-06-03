@@ -1,0 +1,95 @@
+● 239. 滑动窗口最大值
+● 347.前 K 个高频元素
+● 总结
+1、239. 滑动窗口最大值
+（1）题目链接：https://leetcode.cn/problems/sliding-window-maximum/description/
+（2）单调栈算法
+（3）单调队列（使用了一点巧妙的方法，使得队列中的元素全都是单调递增或者递减的）可以辅助解决滑动窗口问题
+    与优先级队列有何不同：因为优先级队列底层利用二叉堆对元素进行动态排序，元素的出队顺序是元素的大小顺序，和入队的先后顺序完全没有关系。所以，现在需要一种新的队列结构，既能够维护队列元素「先进先出」的时间顺序，
+又能够正确维护队列中所有元素的最值，这就是「单调队列」结构。
+（4）先用双端数组deque创建一个单调队列
+class MonotonicQueue{
+private:
+   deque<int>maxq;
+public:
+  void push(int n)
+  {
+    while(!maxq.empty()&&maxq.back()<n)
+    {
+        maxq.pop_back();
+    }
+    maxq.push_back(n);
+  }
+  int max()
+  {
+    return maxq.front();
+  }
+  void pop(int n)
+  {
+    if(n==maxq.front())
+    {
+        maxq.pop_front();
+    }
+  }
+};
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        MonotonicQueue window;
+        vector<int>res;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(i<k-1)
+            {
+                window.push(nums[i]);
+            }
+            else
+            {
+                window.push(nums[i]);
+                res.push_back(window.max());
+                window.pop(nums[i-k+1]);
+            }
+        }
+        return res;
+    }
+};
+2、347.前 K 个高频元素
+（1）题目链接:https://leetcode.cn/problems/top-k-frequent-elements/description/
+（2） 第一步：统计元素出现频率
+      第二步：对频率进行排序（优先级队列，或者）
+      第三步：找出前K个高频元素
+（3）优先级队列
+      priority_queue<int>--默认是大顶堆从大到小排序
+     创建小顶堆--priority_queue<int, vector<int>, greater<int>> pq;
+（4）class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int,int>valtoFreq;
+        for(int c:nums)
+        {
+            valtoFreq[c]++;
+        }
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<>>pq;
+        for(auto &[val,freq]:valtoFreq)
+        {
+            pq.emplace(freq,val);
+            if(pq.size()>k)
+            {
+                pq.pop();
+            }
+        }
+        vector<int>res(k);
+        int i=k-1;
+        while(!pq.empty())
+        {
+            res[i]=pq.top().second;
+            pq.pop();
+            i--;
+        }
+        return res;
+    }
+};
+3、总结
+（1）文章链接：https://programmercarl.com/%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97%E6%80%BB%E7%BB%93.html#%E9%98%9F%E5%88%97%E7%9A%84%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE
+（2）栈里面的元素在内存中是连续分布的么？
+栈是容器适配器，底层容器使用不同的容器，导致栈内数据在内存中不一定是连续分布的。
