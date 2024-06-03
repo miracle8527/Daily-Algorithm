@@ -1,0 +1,17 @@
+● 理论基础
+● 232.用栈实现队列
+● 225. 用队列实现栈
+1、理论基础
+（1）文章学习链接：https://tsejx.github.io/data-structure-and-algorithms-guidebook/data-structure/adt/queue
+（2）栈又称为后进先出（Last In First Out）的线性表，简称 LIFO 结构
+     栈的插入操作 push，叫做进栈，也称压栈、入栈
+     栈的删除操作 pop，叫做出栈，也有称弹栈
+（3）队列是一种先进先出（First In First Out）的线性表，简称 FIFO。
+    插入（insert）操作也称作入队（enqueue），新元素始终被添加在 队列的末尾。 
+    删除（delete）操作也被称为出队（dequeue)。 你只能移除 第一个元素。
+2、232.用栈实现队列
+（1）题目链接：https://leetcode.cn/problems/implement-queue-using-stacks/description/
+（2）基本思想是利用两个栈来复现操作，
+（3）栈的基础操作，pop弹出元素，push插入元素，top表示最上面的元素
+3、225. 用队列实现栈
+（1）题目链接：
