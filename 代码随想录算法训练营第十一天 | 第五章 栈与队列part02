@@ -197,4 +197,5 @@ public:
         return result;
     }
 };
-注意点：tokens[i]=="+"，遍历tokens[i]时，字符类型是stirng，不能使用char型的单引号
+注意点：1、tokens[i]=="+"，遍历tokens[i]时，字符类型是stirng，不能使用char型的单引号
+       2、stoll 函数是 C++11 标准库中的一个函数，用于将字符串转换为 long long 类型的整数
