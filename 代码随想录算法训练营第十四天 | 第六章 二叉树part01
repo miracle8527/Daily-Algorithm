@@ -1,0 +1,96 @@
+理论基础
+● 递归遍历  
+● 迭代遍历
+● 统一迭代
+1、理论基础
+（1）文章学习链接：https://www.hello-algo.com/chapter_tree/binary_tree/
+     根节点（root node）：位于二叉树顶层的节点，没有父节点。
+     叶节点（leaf node）：没有子节点的节点，其两个指针均指向 None 。
+     边（edge）：连接两个节点的线段，即节点引用（指针）。
+     节点所在的层（level）：从顶至底递增，根节点所在层为 1 。
+     节点的度（degree）：节点的子节点的数量。在二叉树中，度的取值范围是 0、1、2 。
+     二叉树的高度（height）：从根节点到最远叶节点所经过的边的数量。
+     节点的深度（depth）：从根节点到该节点所经过的边的数量。
+     节点的高度（height）：从距离该节点最远的叶节点到该节点所经过的边的数量。
+     完美二叉树（perfect binary tree，又叫满二叉树）：所有层的节点都被完全填满
+     完全二叉树（complete binary tree）：只有最底层的节点未被填满，且最底层节点尽量靠左填充。
+     完满二叉树（full binary tree）：除了叶节点之外，其余所有节点都有两个子节点。
+     平衡二叉树（balanced binary tree）中任意节点的左子树和右子树的高度之差的绝对值不超过 1 。
+（2）二叉树的遍历方式
+    常见的遍历方式包括层序遍历、前序遍历、中序遍历和后序遍历等。
+    层序遍历（level-order traversal）：从顶部到底部逐层遍历二叉树，并在每一层按照从左到右的顺序访问节点。层序遍历本质上属于广度优先遍历（breadth-first traversal），
+也称广度优先搜索（breadth-first search, BFS），它体现了一种“一圈一圈向外扩展”的逐层遍历方式。（广度优先遍历通常借助“队列”来实现。）
+    前序、中序和后序遍历都属于深度优先遍历（depth-first traversal），也称深度优先搜索（depth-first search, DFS），它体现了一种“先走到尽头，再回溯继续”的遍历方式。
+深度优先遍历就像是绕着整棵二叉树的外围“走”一圈，在每个节点都会遇到三个位置，分别对应前序遍历、中序遍历和后序遍历。（深度优先搜索通常基于递归实现，也可以基于迭代实现）
+    中间节点的顺序就是所谓的遍历方式
+    前序遍历：中左右
+    中序遍历：左中右
+    后序遍历：左右中
+（3）栈其实就是递归的一种实现结构，递归与迭代有啥区别？
+     递归和迭代都是循环的一种。简单地说，递归是重复调用函数自身实现循环。迭代是函数内某段代码实现循环，而迭代与普通循环的区别是：循环代码中参与运算的变量同时是保存结果
+的变量，当前保存的结果作为下一次循环计算的初始值。递归循环中，遇到满足终止条件的情况时逐层返回来结束。迭代则使用计数器结束循环。
+当然很多情况都是多种循环混合采用，这要根据具体需求。
+（4）二叉树定义（C++代码）
+struct TreeNode
+{
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x):val(x),left(nullptr),right(nullptr){}
+};
+（5）递归三要素：
+  1、确定递归函数的参数和返回值： 确定哪些参数是递归的过程中需要处理的，那么就在递归函数里加上这个参数，并且还要明确每次递归的返回值是什么进而确定递归函数的返回类型。
+  2、确定终止条件： 写完了递归算法, 运行的时候，经常会遇到栈溢出的错误，就是没写终止条件或者终止条件写的不对，操作系统也是用一个栈的结构来保存每一层递归的信息，如果递归没有终止，操作系统的内存栈必然就会溢出。
+  3、确定单层递归的逻辑： 确定每一层递归需要处理的信息。在这里也就会重复调用自己来实现递归的过程。
+（6）144. 二叉树的前序遍历（题目链接：https://leetcode.cn/problems/binary-tree-preorder-traversal/description/）
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int>res;
+        preOrder(root,res);
+        return res;
+    }
+    void preOrder(TreeNode *root,vector<int>&ans)
+    {
+        if(root==nullptr)return;
+        ans.push_back(root->val);
+        preOrder(root->left,ans);
+        preOrder(root->right,ans);
+    }
+};
+（7）94. 二叉树的中序遍历（题目链接：https://leetcode.cn/problems/binary-tree-inorder-traversal/description/）
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int>res;
+        inOrder(root,res);
+        return res;
+    }
+    void inOrder(TreeNode *root,vector<int>&res)
+    {
+        if(root==nullptr)return;
+        inOrder(root->left,res);
+        res.push_back(root->val);
+        inOrder(root->right,res);
+        
+    }
+};
+（8）145. 二叉树的后序遍历（题目链接：https://leetcode.cn/problems/binary-tree-postorder-traversal/description/）
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int>res;
+        lastOrder(root,res);
+        return res;
+    }
+    void lastOrder(TreeNode* root,vector<int>&ans )
+    {
+        if(root==nullptr)return;
+        lastOrder(root->left,ans);
+        lastOrder(root->right,ans);
+        ans.push_back(root->val);
+    }
+};
+（9）疑问：vector<int>& a与vector<int>a有何区别？
+带&表示传入函数的是vector的引用（即物理位置），函数内部对vector改动，vector就会改变；
+不带&表示传入的是vector的复制品（开辟了另一块位置），函数内部对其改动，不会影响原本的vector；
