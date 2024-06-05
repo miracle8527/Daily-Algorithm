@@ -1,0 +1,327 @@
+● 层序遍历  10道题
+● 226.翻转二叉树 
+● 101.对称二叉树 2  
+1、层序遍历
+（1）102. 二叉树的层序遍历（题目链接：https://leetcode.cn/problems/binary-tree-level-order-traversal/description/）
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+       vector<vector<int>>res;
+        if(root==nullptr)
+        {
+            return res;
+        }
+        queue<TreeNode*>q;
+        q.push(root);
+        
+        while(!q.empty())
+        {
+            int sz=q.size();
+            vector<int>level;
+            for(int i=0;i<sz;i++)
+            {
+                TreeNode *cur=q.front();
+                q.pop();
+                level.push_back(cur->val);
+                if(cur->left!=nullptr) q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+
+            }
+            res.push_back(level);
+        }
+        return res;
+    }
+};
+（2）107. 二叉树的层序遍历 II（题目链接：https://leetcode.cn/problems/binary-tree-level-order-traversal-ii/description/）
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>>res;
+        if(root==nullptr)
+        {
+            return res;
+        }
+        queue<TreeNode*>q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            vector<int>level;
+            for(int i=0;i<size;i++)
+            {
+                TreeNode *cur=q.front();
+                q.pop();
+               level.push_back(cur->val);
+               if(cur->left!=nullptr)  q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+            }
+            res.push_back(level);
+        }
+        reverse(res.begin(),res.end());
+        return res;
+    }
+};
+其中reverse(res.begin(),res.end());可以换成res.insert(res.begin(),level);
+（3）199. 二叉树的右视图（题目链接：https://leetcode.cn/problems/binary-tree-right-side-view/description/）
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int>res;
+        if(root==nullptr)
+        {
+            return res;
+        }
+        queue<TreeNode*>q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            TreeNode *cur=nullptr;
+            for(int i=0;i<size;i++)
+            {
+                cur=q.front();
+                q.pop();
+                if(cur->left!=nullptr) q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+            }
+            res.push_back(cur->val);
+        }
+        return res;
+    }
+};
+其中将每一行最右侧节点加入结果中，res.push_back(cur->val);也可加个判断if(i==(size-1)) res.push_back(cur->val);
+（4）637. 二叉树的层平均值（题目链接：https://leetcode.cn/problems/average-of-levels-in-binary-tree/description/）
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        vector<double>res;
+        if(root==nullptr) return res;
+        queue<TreeNode*>q;
+        q.push(root);
+        while(!q.empty())
+        {
+            TreeNode *cur=nullptr;
+            
+            int size=q.size();
+            double sum=0;
+            for(int i=0;i<size;i++)
+            {
+                
+                cur=q.front();
+                q.pop();
+                if(cur->left!=nullptr) q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+                 sum+=cur->val;
+            }
+            res.push_back(sum/size);
+        }
+        return res;
+    }
+};
+层序遍历，将每一层的值累加起来，求个平均值
+（5）429. N叉树的层序遍历（题目链接：https://leetcode.cn/problems/n-ary-tree-level-order-traversal/description/）
+class Solution {
+public:
+    vector<vector<int>> levelOrder(Node* root) {
+        vector<vector<int>>res;
+        if(root==nullptr) return res;
+        queue<Node*>q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            Node *cur=nullptr;
+            vector<int>level;
+            for(int i=0;i<size;i++)
+            {
+                cur=q.front();
+                q.pop();
+               if(cur->children!=nullptr) q.push(cur->children);
+               level.push_back(cur->val);
+            }
+            res.push_back(level);
+        }
+        return res;
+    }
+};
+其中遍历N叉数的子节点时出现错误，应改为 for(Node *child:cur->children)  {q.push(child);}
+（6）515. 在每个树行中找最大值（题目链接：https://leetcode.cn/problems/find-largest-value-in-each-tree-row/description/）
+class Solution {
+public:
+    vector<int> largestValues(TreeNode* root) {
+        vector<int>res;
+        if(root==nullptr)return res;
+        queue<TreeNode*>q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            TreeNode *cur=nullptr;
+            int maxNum=INT_MIN;
+            for(int i=0;i<size;i++)
+            {
+                cur=q.front();
+                q.pop();
+                maxNum=maxNum>cur->val?maxNum:cur->val;
+                if(cur->left!=nullptr) q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+                
+            }
+            res.push_back(maxNum);
+        }
+        return res;
+    }
+};
+注意点：1、如何取每一层的最大值：maxNum=maxNum>cur->val?maxNum:cur->val或写成：maxNum = max(maxNum, cur->val);
+       2、maxNum初始值不要设置为0，因为二叉树的节点值可能为负数。所以设置为INT_MIN（较小的值）
+（7）116. 填充每个节点的下一个右侧节点指针（题目链接：https://leetcode.cn/problems/populating-next-right-pointers-in-each-node/）
+class Solution {
+public:
+    Node* connect(Node* root) {
+        queue<Node*>q;
+        if(root!=NULL) q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            Node *cur;
+            Node *Precur;
+            for(int i=0;i<size;i++)
+            {
+                if(i==0)
+                {
+                    Precur=q.front();
+                    q.pop();
+                    cur=Precur;
+                }
+                else
+                {
+                    cur=q.front();
+                    q.pop();
+                    Precur->next=cur;
+                    Precur=Precur->next;
+                }
+                if(cur->left!=NULL) q.push(cur->left);
+                if(cur->right!=NULL) q.push(cur->right);
+            }
+            Precur->next=NULL;
+        }
+        return root;
+    }
+};
+（8）117. 填充每个节点的下一个右侧节点指针II
+class Solution {
+public:
+    Node* connect(Node* root) {
+        queue<Node*>q;
+        if(root!=NULL) q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            Node *cur;
+            Node *Precur;
+            for(int i=0;i<size;i++)
+            {
+                if(i==0)
+                {
+                    Precur=q.front();
+                    q.pop();
+                    cur=Precur;
+                }
+                else
+                {
+                    cur=q.front();
+                    q.pop();
+                    Precur->next=cur;
+                    Precur=Precur->next;
+                }
+                if(cur->left!=NULL) q.push(cur->left);
+                if(cur->right!=NULL) q.push(cur->right);
+            }
+            Precur->next=NULL;
+        }
+        return root;
+    }
+};
+（9）104. 二叉树的最大深度
+public:
+    int maxDepth(TreeNode* root) {
+         int res=0;
+        queue<TreeNode*>q;
+        q.push(root);
+        if(root==nullptr)return res;
+        while(!q.empty())
+        {
+            int size=q.size();
+            
+            for(int i=0;i<size;i++)
+            {
+                TreeNode *cur=q.front();
+                q.pop();
+                if(cur->left!=nullptr) q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+            }
+            res++;
+        } 
+        return res;
+    }
+};
+（10）111. 二叉树的最小深度
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(root==nullptr)return 0;
+        queue<TreeNode*>q;
+        q.push(root);
+        int depth=0;
+        while(!q.empty())
+        {
+            int size=q.size();
+            depth++;
+            for(int i=0;i<size;i++)
+            {
+                TreeNode *cur=q.front();
+                 q.pop();
+               // 如果当前节点是叶子节点，直接返回当前深度
+                if(cur->left==nullptr&&cur->right==nullptr) return depth;
+               // 否则，将其左右子节点加入队列
+                if(cur->left!=nullptr) q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+
+            }
+        }
+        return depth;
+    }
+};
+2、226. 翻转二叉树
+（1）题目链接：https://leetcode.cn/problems/invert-binary-tree/description/
+（2）class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        treeverse(root);
+        return root;
+    }
+    void treeverse(TreeNode* root)
+    {
+        if(root==nullptr)return;
+        TreeNode *tmp=root->left;
+        root->left=root->right;
+        root->right=tmp;
+        treeverse(root->left);
+        treeverse(root->right);
+    }
+};
+3、101. 对称二叉树
+（1）题目链接：https://leetcode.cn/problems/symmetric-tree/description/
+（2）class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+       return isSameTree(root->left,root->right);   
+    }
+    public:
+    bool isSameTree(TreeNode *p,TreeNode *q)
+    {
+        if(p==nullptr||q==nullptr)
+        return p==q;
+        return q->val==p->val&&isSameTree(p->left,q->right)&&isSameTree(p->right,q->left);
+    }
+};
