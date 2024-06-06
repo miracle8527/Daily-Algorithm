@@ -1,0 +1,126 @@
+今日重点是学习递归法解题
+● 104.二叉树的最大深度  559.n叉树的最大深度
+● 111.二叉树的最小深度
+● 222.完全二叉树的节点个数
+1、求最大深度
+（1）104.二叉树的最大深度（题目链接：https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/）
+递归法：class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        return getDepth(root);
+    }
+    int getDepth(TreeNode* root)
+    {
+        int depth=0;
+        if(root==nullptr)return 0;
+        int leftdepth=getDepth(root->left);
+        int rightdepth=getDepth(root->right);
+        depth=1+max(leftdepth,rightdepth);
+        return depth;
+    }
+};
+（2）559.n叉树的最大深度（题目链接:https://leetcode.cn/problems/maximum-depth-of-n-ary-tree/description/）
+递归法：class Solution {
+public:
+    int maxDepth(Node* root) {
+        return getDepth(root);
+    }
+    int getDepth(Node* root )
+    {
+        if(root==nullptr) return 0;
+          int depth=0;
+            for(auto child:root->children)
+            {
+            int tmpdepth=getDepth(child);
+            depth=depth>tmpdepth?depth:tmpdepth;
+            }
+
+        return depth+1;
+    }
+};
+2、111.二叉树的最小深度（题目链接：）
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        return getminDepth(root);
+    }
+    int getminDepth(TreeNode *root)
+    {
+        if(root==nullptr) return 0;
+        int depth=0;
+        if(root->left==nullptr&&root->right==nullptr) //叶子节点都为空  返回1
+        {
+            return 1;
+        }
+        if(root->left==nullptr&&root->right!=nullptr) //左节点都为空  计算右侧的节点
+        {
+            return getminDepth(root->right)+1;
+        }
+        if(root->right==nullptr&&root->left!=nullptr) //右节点都为空  计算左侧的节点
+        {
+            return getminDepth(root->left)+1;
+        }
+        int leftdepth=getminDepth(root->left);
+        int rightdepth=getminDepth(root->right);
+        return min(leftdepth+1,rightdepth+1);  //求最小值
+    }
+};
+3、222.完全二叉树的节点个数（题目链接：https://leetcode.cn/problems/count-complete-tree-nodes/）
+（1）解法一（普通二叉树）
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if(root==nullptr) return 0;
+        queue<TreeNode*>q;
+        q.push(root);
+        int ans=0;
+        while(!q.empty())
+        {
+            
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                TreeNode *cur=q.front();
+                q.pop();
+                if(cur->left!=nullptr) q.push(cur->left);
+                if(cur->right!=nullptr) q.push(cur->right);
+                ans++;
+            }
+        }
+        return ans;
+    }
+};
+（2）解法二（普通二叉树）
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if(root==nullptr) return 0;
+        return countNodes(root->left)+countNodes(root->right)+1;
+    }
+};
+（3）解法三（完全二叉树）
+在完全二叉树中，如果递归向左遍历的深度等于递归向右遍历的深度，那说明就是满二叉树。
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if(root==nullptr) return 0;
+        TreeNode *leftnode=root->left;
+        TreeNode *rightnode=root->right;
+        int leftdepth=0,rightdepth=0;
+        while(leftnode)
+        {
+            leftnode=leftnode->left;
+            leftdepth++;
+        }
+        while(rightnode)
+        {
+            rightnode=rightnode->right;
+            rightdepth++;
+        }
+        if(leftdepth==rightdepth)
+        {
+            return (2<<leftdepth)-1;
+        }
+        return countNodes(root->left)+countNodes(root->right)+1;
+    }
+};
