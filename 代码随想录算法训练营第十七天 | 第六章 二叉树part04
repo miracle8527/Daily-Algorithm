@@ -1,3 +1,6 @@
+● 110.平衡二叉树 
+● 257. 二叉树的所有路径 
+● 404.左叶子之和 
 
 1、110. 平衡二叉树
 （1）题目链接：https://leetcode.cn/problems/balanced-binary-tree/description/
@@ -52,5 +55,22 @@ public:
             if(node->left) dfs(node->left,currentpath,paths);
             if(node->right) dfs(node->right,currentpath,paths);
         }
+    }
+};
+3、404.左叶子之和
+（1）题目链接：https://leetcode.cn/problems/sum-of-left-leaves/description/
+（2）递归法
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(root==nullptr) return 0;
+        int sum=0;
+        if(root->left!=nullptr&&root->left->left==nullptr&&root->left->right==nullptr)
+        {
+            sum+=root->left->val;
+        }
+        sum+=sumOfLeftLeaves(root->left);
+        sum+=sumOfLeftLeaves(root->right);
+        return sum;
     }
 };
