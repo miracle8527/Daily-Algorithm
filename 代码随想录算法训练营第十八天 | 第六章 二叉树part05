@@ -3,3 +3,27 @@
 ● 106.从中序与后序遍历序列构造二叉树 105.从前序与中序遍历序列构造二叉树
 1、513.找树左下角的值
 （1）题目链接：https://leetcode.cn/problems/find-bottom-left-tree-value/description/
+（2）迭代法（重点是如何寻找每一层的最左边的值：if(i==0) left_ans=cur->val;）
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        if(root==nullptr) return 0;
+        queue<TreeNode*>q;
+        q.push(root);
+        int left_ans=0;
+        while(!q.empty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                TreeNode *cur=q.front();
+                q.pop();
+                if(i==0) left_ans=cur->val;
+                if(cur->left!=nullptr)  q.push(cur->left);
+
+                if(cur->right!=nullptr) q.push(cur->right);
+            }
+        }
+        return left_ans;
+    }
+};
