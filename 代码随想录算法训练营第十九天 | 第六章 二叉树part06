@@ -1,0 +1,75 @@
+● 654.最大二叉树 
+● 617.合并二叉树 
+● 700.二叉搜索树中的搜索 
+● 98.验证二叉搜索树 
+1、654.最大二叉树 
+（1）题目链接：https://leetcode.cn/problems/maximum-binary-tree/description/
+（2）class Solution {
+public:
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        return build(nums,0,nums.size()-1);
+    }
+    TreeNode * build(vector<int>&nums,int left,int right)
+    {
+        if(left>right)
+        {
+            return nullptr;
+        }
+        int index=-1,maxval=INT_MIN;
+        for(int i=left;i<=right;i++)
+        {
+            if(maxval<nums[i])
+            {
+                index=i;
+                maxval=nums[i];
+            }
+        }
+        TreeNode *root=new TreeNode(maxval);
+        root->left=build(nums,left,index-1);
+        root->right=build(nums,index+1,right);
+        return root;
+    }
+};
+2、617.合并二叉树 
+（1）题目链接：https://leetcode.cn/problems/merge-two-binary-trees/description/
+（2）class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        if(root1==nullptr) return root2;
+        if(root2==nullptr) return root1;
+        root1->val+=root2->val;
+        root1->left=mergeTrees(root1->left,root2->left);
+        root1->right=mergeTrees(root1->right,root2->right);
+        return root1;
+    }
+};
+3、700.二叉搜索树中的搜索
+（1）题目链接：https://leetcode.cn/problems/search-in-a-binary-search-tree/description/
+（2）二叉搜索树，左子树小于根节点，右子树大于根节点
+（3）class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if(root==nullptr||root->val==val) return root;
+        TreeNode *res=nullptr;
+        if(root->val>val) res=searchBST(root->left,val);
+        if(root->val<val) res=searchBST(root->right,val);
+        return res;
+    }
+};
+4、98.验证二叉搜索树 
+（1）题目链接：https://leetcode.cn/problems/validate-binary-search-tree/description/
+（2）class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        return isValidBST_my(root,nullptr,nullptr);
+    }
+    bool isValidBST_my(TreeNode* node,TreeNode *left,TreeNode *right)
+    {
+        if(node==nullptr) return true;
+        if((left!=nullptr&&node->val<=left->val)||(right!=nullptr&&node->val>=right->val))
+        {
+            return false;
+        }
+        return isValidBST_my(node->left,left,node)&&isValidBST_my(node->right,node,right);
+    }
+};
