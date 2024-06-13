@@ -1,0 +1,56 @@
+530.二叉搜索树的最小绝对差 
+501.二叉搜索树中的众数 
+236. 二叉树的最近公共祖先 
+1、530.二叉搜索树的最小绝对差 
+（1）题目链接：https://leetcode.cn/problems/minimum-absolute-difference-in-bst/description/
+（2）int minDiff = INT_MAX;而不是int minDiff = INT_MIN;
+   因为要求最小值，所以要确保很容易的把minDiff的值替换了。
+（3）class Solution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        int pre=-1;
+        int minDiff=INT_MAX;
+        getDif(root,pre,minDiff);
+        return minDiff;
+    }
+    void getDif(TreeNode* node,int &pre,int & minDiff)
+    {
+        if(node==nullptr) return;
+        getDif(node->left,pre,minDiff);
+        if(pre!=-1)
+        {
+            minDiff=min(minDiff,node->val-pre);
+        }
+        pre=node->val;
+        getDif(node->right,pre,minDiff);
+    }
+};
+2、501.二叉搜索树中的众数
+（1）题目链接：https://leetcode.cn/problems/find-mode-in-binary-search-tree/description/
+（2）解法一，通用的解法
+class Solution {
+    void SearchBSF(TreeNode* node,unordered_map<int,int>&map)
+    {
+        if(node==nullptr) return ;
+        SearchBSF(node->left,map);
+        map[node->val]++;
+        SearchBSF(node->right,map);
+    }
+public:
+    vector<int> findMode(TreeNode* root) {
+        unordered_map<int,int>mapp;
+        vector<int>res;
+        if(root==nullptr) return res;
+        SearchBSF(root,mapp);
+        vector<pair<int,int>>vec(mapp.begin(),mapp.end());
+        sort(vec.begin(),vec.end(),[](const pair<int,int>&a,pair<int,int>&b){return a.second>b.second;});
+        res.push_back(vec[0].first);
+        for(int i=1;i<vec.size();i++)
+        {
+            if(vec[0].second==vec[i].second) res.push_back(vec[i].first);
+            else break;
+        }
+        return res;
+    }
+};
+（3）解法二
