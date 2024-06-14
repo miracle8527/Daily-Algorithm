@@ -1,0 +1,144 @@
+ 235. 二叉搜索树的最近公共祖先 
+ 701.二叉搜索树中的插入操作  
+ 450.删除二叉搜索树中的节点  
+1、235. 二叉搜索树的最近公共祖先
+（1）题目链接：https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/description/
+（2）第一种解法，常规解法
+（3）利用二叉搜索树的解法（左边比root小，右边比root大）
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        int num1=min(p->val,q->val);
+        int num2=max(p->val,q->val);
+        return getLCA(root,num1,num2);
+    }
+    TreeNode* getLCA(TreeNode*node,int num1,int num2)
+    {
+        if(node==NULL) return NULL;
+        if(node->val>num2)
+        {
+            return getLCA(node->left,num1,num2);
+        }
+        else if(node->val<num1)
+        {
+            return getLCA(node->right,num1,num2);
+        }
+        return node;
+    }
+};
+2、701.二叉搜索树中的插入操作
+（1）题目链接：https://leetcode.cn/problems/insert-into-a-binary-search-tree/description/
+（2）class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        if(root==nullptr) return new TreeNode(val);
+        if(root->val<val)
+        {
+            root->right=insertIntoBST(root->right,val);
+        }
+        if(root->val>val)
+        {
+            root->left=insertIntoBST(root->left,val);
+        }
+        return root;
+    }
+};
+3、450.删除二叉搜索树中的节点
+（1）题目链接：https://leetcode.cn/problems/delete-node-in-a-bst/description/
+（2）代码
+class Solution {
+public:
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(root==nullptr) return nullptr;
+        if(root->val==key)
+        {
+            if(root->left==nullptr&&root->right==nullptr)
+            {
+                root=nullptr;
+            }
+             else if(root->left!=nullptr)
+            {
+                root=root->left;
+            }
+            else if(root->right!=nullptr)
+            {
+                root=root->right;
+            }
+            else if(root->left!=nullptr&&root->right!=nullptr)
+            {
+                TreeNode *Minnode=getmin(root->right);
+                root->right=deleteNode(root->right,Minnode->val);
+                Minnode->left=root->left;
+                Minnode->right=root->right;
+                root=Minnode;
+            }
+        }
+        else if(root->val>key)
+        {
+            root->left=deleteNode(root->left,key);
+        }
+        else if(root->val<key)
+        {
+            root->right=deleteNode(root->right,key);
+        }
+        return root;
+    }
+    TreeNode* getmin(TreeNode *node)
+    {
+        while(node->left!=nullptr)
+        {
+            node=node->left;
+        }
+        return node;
+    }
+};
+存在错误：单支时，左字数不为空，或者右子树不为空时的判断条件错误
+ else if(root->left!=nullptr)因为单节点的判断，存在右节点不为空的情况，应该写为 else if(root->left!=nullptr&&root->right==nullptr)
+因为：逻辑上没有处理好只有一个子节点的情况。应该分别处理只有左子节点和只有右子节点的情况，而不是混在一起。
+正确代码如下：
+class Solution {
+public:
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(root==nullptr) return nullptr;
+        if(root->val==key)
+        {
+            if(root->left==nullptr&&root->right==nullptr)
+            {
+                root=nullptr;
+            }
+             else if(root->left!=nullptr&&root->right==nullptr)
+            {
+                root=root->left;
+            }
+            else if(root->right!=nullptr&&root->left==nullptr)
+            {
+                root=root->right;
+            }
+            else if(root->left!=nullptr&&root->right!=nullptr)
+            {
+                TreeNode *Minnode=getmin(root->right);
+                root->right=deleteNode(root->right,Minnode->val);
+                Minnode->left=root->left;
+                Minnode->right=root->right;
+                root=Minnode;
+            }
+        }
+        else if(root->val>key)
+        {
+            root->left=deleteNode(root->left,key);
+        }
+        else if(root->val<key)
+        {
+            root->right=deleteNode(root->right,key);
+        }
+        return root;
+    }
+    TreeNode* getmin(TreeNode *node)
+    {
+        while(node->left!=nullptr)
+        {
+            node=node->left;
+        }
+        return node;
+    }
+};
