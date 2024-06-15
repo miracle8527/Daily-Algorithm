@@ -1,0 +1,63 @@
+669. 修剪二叉搜索树 
+108.将有序数组转换为二叉搜索树  
+538.把二叉搜索树转换为累加树 
+二叉树总结
+1、669. 修剪二叉搜索树
+（1）题目链接：https://leetcode.cn/problems/trim-a-binary-search-tree/description/
+（2）将不在区间[low,high]内的节点删去，由于二叉搜索树的性质，如果当前节点小于low，左侧可以全删，如果当前节点大于high，将右侧全删
+（3）class Solution {
+public:
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+        if(root==nullptr) return nullptr;
+        if(root->val<low)
+        {
+            return trimBST(root->right,low,high);
+        }
+        if(root->val>high)
+        {
+            return trimBST(root->left,low,high);
+        }
+        root->left=trimBST(root->left,low,high);
+        root->right=trimBST(root->right,low,high);
+        return root;
+    }
+};
+2、108.将有序数组转换为二叉搜索树 
+（1）题目链接：https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/description/
+（2）class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return build(nums,0,nums.size()-1);
+    }
+    TreeNode *build(vector<int>&nums,int left,int right)
+    {
+        if(left>right) return nullptr;
+        int mid=(right-left)/2+left;
+        TreeNode *root=new TreeNode(nums[mid]);
+        root->left=build(nums,left,mid-1);
+        root->right=build(nums,mid+1,right);
+        return root;
+    }
+};
+3、538.把二叉搜索树转换为累加树
+（1）题目链接：https://leetcode.cn/problems/convert-bst-to-greater-tree/description/
+（2）class Solution {
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        totalSum(root);
+        return root;
+        
+    }
+    int sum=0;
+    void totalSum(TreeNode* node)
+    {
+        if(node==nullptr)
+        {
+            return;
+        }
+        totalSum(node->right);
+        sum+=node->val;
+        node->val=sum;
+        totalSum(node->left);
+    }
+};
