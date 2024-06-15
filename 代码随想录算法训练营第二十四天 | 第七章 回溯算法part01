@@ -1,0 +1,111 @@
+理论基础
+77. 组合 
+216.组合总和III 
+17.电话号码的字母组合 
+1、理论基础
+回溯算法和我们常说的 DFS 算法非常类似，本质上就是一种暴力穷举算法。回溯算法和 DFS 算法的细微差别是：回溯算法是在遍历「树枝」，DFS 算法是在遍历「节点」
+站在回溯树的节点上，需要考虑三个问题：1、路径（已经作出的选择），2、选择列表（当前可以做的选择），3、结束条件（到达决策层底部，无法再做选择的条件）
+2、77. 组合
+（1）题目链接：https://leetcode.cn/problems/combinations/description/
+（2）翻译成子集问题：给你输入一个数组 nums = [1,2..,n] 和一个正整数 k，请你生成所有大小为 k 的子集。反映到代码上，只需要稍改 base case，控制算法仅仅收集第 k 层节点的值即可
+（3）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+public:
+    vector<vector<int>> combine(int n, int k) {
+        backtrack(1,n,k);
+        return res;
+    }
+    void backtrack(int start, int n,int k)
+    {
+        if(k==track.size())
+        {
+            res.push_back(track);
+            return;
+        }
+        
+        for(int i=start;i<=n;i++)
+        {
+            track.push_back(i);
+            backtrack(i+1,n,k);
+            track.pop_back();
+        }
+    }
+};
+3、216.组合总和III 
+（1）题目链接：https://leetcode.cn/problems/combination-sum-iii/description/
+（2）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+    int sum=0;
+public:
+    vector<vector<int>> combinationSum3(int k, int n) {
+       vector<int>nums;
+        for(int i=1;i<10;i++)
+        {
+            nums.push_back(i);
+        }
+        backtrack(nums,k,n,0);
+        return res;
+    }
+    void backtrack(vector<int>&nums,int k,int n,int start)
+    {
+        if(sum>n)
+        {
+            return;
+        }
+        if(k==track.size()&&sum==n)
+        {
+            res.push_back(track);
+            return;
+        }
+        for(int i=start;i<nums.size();i++)
+        {
+            track.push_back(nums[i]);
+            sum+=nums[i];
+            backtrack(nums,k,n,i+1);
+            track.pop_back();
+            sum-=nums[i];
+        }
+    }
+};
+4、17.电话号码的字母组合
+（1）题目链接：https://leetcode.cn/problems/letter-combinations-of-a-phone-number/description/
+（2）class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> mapping={"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        vector<string>res;
+        if(digits.empty())
+        {
+            return res;
+        }
+        vector<char>element;
+        bakctrack(0,element,res,digits,mapping);
+        return res;
+    }
+    void backtrack(int start,vector<char>&element,vector<string>&res,string&digits,vector<string>&mapping)
+    {
+        if(element.size()==digits.size())
+        {
+            res.push_back(string(element.begin(),element.end()));
+            return;
+        }
+        for(int i=start;i<digits.size();i++)
+        {
+            int digit=digits[i]-'0';
+            for(char c:mapping[digit])
+            {
+                element.push_back(c);
+                bakctrack(i+1,element,res,digits,mapping);
+                element.pop_back();
+            }
+        }
+    }
+};
+（3）问题1：为什么mapping要前两个空的
+    答：因为字母映射中，0和1不对应任何字母，所以是空字符串
+    问题2：为什么需要 int digit=digits[i]-'0';   for(char c:mapping[digit])，这样将字符中的数字转化为整数值。
+    答：C++中因为字符数字是char类型，是不能直接用作数组的索引，所以需要通过 -'0'的方式进行转化成对应的整数值。 
+    问题3：在什么情况下才会用到-'0'这种转化方式？
+     答：在处理包含数字字符的字符串时，经常需要将这些字符转换为对应的整数值。
