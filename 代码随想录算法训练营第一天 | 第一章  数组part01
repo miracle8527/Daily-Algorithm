@@ -79,7 +79,7 @@ public:
 public:
     int removeElement(vector<int>& nums, int val) {
         int slow=0;
-        for(int fast=0;fast<=nums.size()-1;fast++)
+        for(int fast=0;fast<=nums.size()-1;fast++) ----------------条件错了
         {
             if(nums[fast]!=val)
             {
@@ -90,3 +90,37 @@ public:
     }
 };
 思考点：为什么写fast<=nums.size()-1报错，改成fast<nums.size()就可以了？
+少考虑了一个条件，nums为空时的情况
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        if(nums.empty())
+        {
+            return 0;
+        }
+        int slow=0;
+        for(int fast=0;fast<=nums.size()-1;fast++)
+        {
+            if(nums[fast]!=val)
+            {
+                nums[slow++]=nums[fast];
+            }
+        }
+        return slow;
+    }
+};
+与
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int slow=0;
+        for(int fast=0;fast<nums.size();fast++)
+        {
+            if(nums[fast]!=val)
+            {
+                nums[slow++]=nums[fast];
+            }
+        }
+        return slow;
+    }
+};是等价的
