@@ -32,7 +32,7 @@ public:
       是比较a与b的值，a大于b则函数为“1”代表“true”,进行降序排序，如果需要升序排列，应改为 return a<b 此时a<b满足时，返回“true”。
     疑问点2：为什么sort函数中使用自定义函数myCompare没有“()”括号
         因为上述myCompare是一个函数指针，不是函数调用，在 C++ 中，函数的名称（没有括号和参数）会自动转换为指向该函数的指针。
-     1.3 vector排序,使用Lambda匿名函数进行升序排列，升序排列：std:sort(v,begin(),v.end(),[](int a,int b){return a<b;})
+     1.3 vector排序,使用Lambda匿名函数进行升序排列，升序排列：std:sort(v.begin(),v.end(),[](int a,int b){return a<b;})
         1.3.1 复习Lambda匿名函数用法（参考文章：https://www.cnblogs.com/pzhfei/archive/2013/01/14/lambda_expression.html）
                Lambda表达式如下：[capture](parameters)->return-type{body} 
     如果没有参数,空的圆括号()可以省略.返回值也可以省略,如果函数体只由一条return语句组成或返回类型为void的话.形如:[capture](parameters){body}
