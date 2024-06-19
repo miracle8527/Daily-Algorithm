@@ -1,0 +1,116 @@
+39. 组合总和
+40.组合总和II 
+131.分割回文串
+1、39. 组合总和
+（1）题目链接：https://leetcode.cn/problems/combination-sum/description/
+（2）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        if(candidates.size()==0)
+        {
+            return res;
+        }
+        backtrack(candidates,0,0,target);
+        return res;
+    }
+    void backtrack(vector<int>&nums,int start,int sum,int target)
+    {
+        //终止条件
+        if(sum==target)
+        {
+            res.push_back(track);
+            return;
+        }
+        if(sum>target)
+        {
+            return;
+        }
+        for(int i=start;i<nums.size();i++)
+        {
+            track.push_back(nums[i]);
+            sum+=nums[i];
+            backtrack(nums,i,sum,target);
+            track.pop_back();
+            sum-=nums[i];
+        }
+    }
+};
+2、40.组合总和II
+（1）题目链接：https://leetcode.cn/problems/combination-sum-ii/description/
+（2）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        bakctrack(candidates,0,target,0);
+        return res;
+    }
+    void bakctrack(vector<int>&nums,int start,int target,int sum)
+    {
+        if(sum==target)
+        {
+            res.push_back(track);
+            return;
+        }
+        if(sum>target)
+        {
+            return;
+        }
+        for(int i=start;i<nums.size();i++)
+        {
+            if(i>start&&nums[i]==nums[i-1])
+            {
+                continue;
+            }
+            track.push_back(nums[i]);
+            sum+=nums[i];
+            bakctrack(nums,i+1,target,sum);
+            track.pop_back();
+            sum-=nums[i];
+        }
+    }
+};
+3、131.分割回文串
+（1）题目链接：https://leetcode.cn/problems/palindrome-partitioning/description/
+（2）class Solution {
+    vector<vector<string>>res;
+    vector<string>track;
+public:
+    vector<vector<string>> partition(string s) {
+        baktrack(s,0);
+        return res;
+    }
+    void baktrack(string &s,int start)
+    {
+        if(s.length()==start)
+        {
+            res.push_back(track);
+        }
+        for(int i=start;i<s.size();i++)
+        {
+            if(!isHUIWEN(s,start,i))
+            {
+                continue;
+            }
+            track.push_back(s.substr(start,i-start+1));
+            baktrack(s,i+1);
+            track.pop_back();
+        }
+    }
+    bool isHUIWEN(string &s,int left,int right)
+    {
+        while(left<right)
+        {
+            if(s[left]!=s[right])
+            {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+};
