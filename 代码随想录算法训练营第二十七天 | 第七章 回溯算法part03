@@ -1,0 +1,115 @@
+93.复原IP地址  
+78.子集
+90.子集II 
+1、93.复原IP地址 
+（1）题目链接：https://leetcode.cn/problems/restore-ip-addresses/description/
+（2）class Solution {
+    vector<string>res;
+    deque<string>track;
+public:
+    vector<string> restoreIpAddresses(string s) {
+        backtrack(s,0);
+        return res;
+    }
+    void backtrack(string& s,int start)
+    {
+        //终止条件
+        if(start==s.size()&&track.size()==4)
+        {
+            res.push_back(Change_track(track));
+            return;
+        }
+        for(int i=start;i<s.size();i++)
+        {
+            if(!isIPAddress(s,start,i))
+            {
+                continue;
+            }
+            if(track.size()>4)
+            {
+                break;
+            }
+            track.push_back(s.substr(start,i-start+1));
+            backtrack(s,i+1);
+            track.pop_back();
+        }
+    }
+    bool isIPAddress(string &s,int left,int right)
+    {
+        int len=right-left+1;
+        if(len>3||len==0)
+        {
+            return false;
+        }
+        if(len>1&&s[left]=='0')
+        {
+            return false;
+        }
+        if(stoi(s.substr(left,len))>255)
+        {
+            return false;
+        }
+        return true;
+    }
+    string Change_track(deque<string>&track)
+    {
+        string res="";
+        for(int i=0;i<track.size();i++)
+        {
+            res+=track[i];
+            if(i<track.size()-1)
+            {
+                res+=".";
+            }
+        }
+        return res;
+    }
+};
+2、78.子集
+（1）题目链接：https://leetcode.cn/problems/subsets/description/
+（2）class Solution {
+    private:
+    vector<vector<int>>res;
+    vector<int>track;
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        backtrack(nums,0);
+        return res;
+    }
+    void backtrack(vector<int>&nums,int start)
+    {
+        res.push_back(track);
+        for(int i=start;i<nums.size();i++)
+        {
+            track.push_back(nums[i]);
+            backtrack(nums,i+1);
+            track.pop_back();
+        }
+    }
+};
+3、90.子集II  
+（1）题目链接：https://leetcode.cn/problems/subsets-ii/description/
+（2）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        backtrack(nums,0);
+        return res;
+    }
+    void backtrack(vector<int>&nums,int start)
+    {
+        res.push_back(track);
+        for(int i=start;i<nums.size();i++)
+        {
+            if(i>start&&nums[i]==nums[i-1])
+            {
+                continue;
+            }
+            track.push_back(nums[i]);
+            backtrack(nums,i+1);
+            track.pop_back();
+        }
+    }
+};
