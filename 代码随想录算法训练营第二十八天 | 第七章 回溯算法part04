@@ -1,0 +1,114 @@
+491.递增子序列
+46.全排列
+47.全排列 II 
+1、491.递增子序列
+（1）题目链接：https://leetcode.cn/problems/non-decreasing-subsequences/description/
+（2）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+public:
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        if(nums.empty())
+        {
+            return res;
+        }
+        backtrack(nums,0);
+        return res;
+    }
+    void backtrack(vector<int>&nums,int start)
+    {
+        if(track.size()>=2)
+        {
+            res.push_back(track);
+        }
+        unordered_set<int>used;
+        for(int i=start;i<nums.size();i++)
+        {
+            if(!track.empty()&&track.back()>nums[i])
+            {
+                continue;
+            }
+            if(used.count(nums[i]))
+            {
+                continue;
+            }
+            used.insert(nums[i]);
+            track.push_back(nums[i]);
+            backtrack(nums,i+1);
+            track.pop_back();
+        }
+    }
+};
+2、46.全排列
+（1）题目链接：https://leetcode.cn/problems/permutations/description/
+（2）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<bool>used(nums.size(),false);
+        backtrack(nums,track,used);
+        return res;
+    }
+    void backtrack(vector<int>&nums,vector<int>&track,vector<bool>&used)
+    {
+        if(track.size()==nums.size())
+        {
+            res.push_back(track);
+            return;
+        }
+        for(int i=0;i<nums.size();i++)
+        {
+            if(used[i]==true)
+            {
+                continue;
+            }
+            else
+            {
+                track.push_back(nums[i]);
+                used[i]=true;
+                backtrack(nums,track,used);
+                track.pop_back();
+                used[i]=false;
+            }
+        }
+
+    }
+};
+3、47.全排列 II 
+（1）题目链接：https://leetcode.cn/problems/permutations-ii/description/
+（2）class Solution {
+    vector<vector<int>>res;
+    vector<int>track;
+    set<vector<int>>uniqueNumber;
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<bool>used(nums.size(),false); 
+        backtrack(nums,track,used);
+        return res;
+    }
+    void backtrack(vector<int>&nums,vector<int>&track,vector<bool>&used)
+    {
+        if(track.size()==nums.size())
+        {
+            if(uniqueNumber.find(track)==uniqueNumber.end())
+            {
+                res.push_back(track);
+                uniqueNumber.insert(track);
+            }
+            return;
+        }
+        for(int i=0;i<nums.size();i++)
+        {
+            if(used[i])
+            {
+                continue;
+            }
+            track.push_back(nums[i]);
+            used[i]=true;
+            backtrack(nums,track,used);
+            track.pop_back();
+            used[i]=false;
+        }
+    }
+};
