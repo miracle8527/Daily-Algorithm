@@ -1,0 +1,27 @@
+455.分发饼干
+376. 摆动序列  
+53. 最大子序和
+1、理论知识
+2、455.分发饼干
+（1）题目链接：
+（2）先排序，然后从小到大依次进行对比，如果符合条件，child加1，不符合cookie加1
+（3）class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+        int child=0,cookie=0;
+        while(child<g.size()&&cookie<s.size())
+        {
+            if(g[child]<=s[cookie])
+            {
+                child++;
+            }
+            cookie++;
+        }
+        return child;
+    }
+};
+3、376. 摆动序列
+（1）题目链接：
+（2）
