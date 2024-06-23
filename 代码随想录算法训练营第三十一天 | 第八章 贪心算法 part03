@@ -1,0 +1,177 @@
+134. 加油站
+135. 分发糖果 
+860.柠檬水找零 
+406.根据身高重建队列
+
+1、134. 加油站
+（1）题目链接：https://leetcode.cn/problems/gas-station/description/
+（2）如果选择站点 i 作为起点「恰好」无法走到站点 j，那么 i 和 j 中间的任意站点 k 都不可能作为起点。
+（3）class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int total_gas=0,total_cost=0,current_gas=0,start=0;
+        for(int i=0;i<gas.size();i++)
+        {
+            total_gas+=gas[i];
+            total_cost+=cost[i];
+            current_gas+=gas[i]-cost[i];
+            if(current_gas<0)
+            {
+                start=i+1;
+                current_gas=0;
+            }
+        }
+        if(total_cost>total_gas) return -1;
+        return start;
+    }
+};
+2、135. 分发糖果
+（1）题目链接：https://leetcode.cn/problems/candy/description/
+（2）两次贪心，两次遍历：从左到右，考虑当前值和左边的值进行比较；从右到左，考虑当前值和右边的值进行比较
+（3）class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        vector<int>candyVec(ratings.size(),1);
+        for(int i=1;i<ratings.size();i++)
+        {
+            if(ratings[i]>ratings[i-1])
+            {
+                candyVec[i]=candyVec[i-1]+1;
+            }
+        }
+        for(int i=ratings.size()-2;i>=0;i--)
+        {
+            if(ratings[i]>ratings[i+1])
+            {
+                candyVec[i]=max(candyVec[i],candyVec[i+1]+1);
+            }
+        }
+        int res=0;
+        for(int num:candyVec)
+        {
+            res+=num;
+        }
+        return  res;
+    }
+};
+3、860.柠檬水找零
+（1）题目链接：https://leetcode.cn/problems/lemonade-change/description/
+（2）class Solution {
+public:
+    bool lemonadeChange(vector<int>& bills) {
+        int five=0,ten=0;
+        for(int bill:bills)
+        {
+            if(bill==5)
+            {
+                five++;
+            }
+            else if(bill==10)
+            {
+                if(five>0)
+                {
+                    five--;
+                    ten++;
+                }
+                else return false;
+            }
+            else if(bill==20)
+            {
+                if(ten>0&&five>0)
+                {
+                    ten--;
+                    five--;
+                }
+                else if(ten==0&&five>=3)
+                {
+                    five-=3;
+                }
+                else return false;
+            }
+        }
+        return true;
+    }
+};
+（3）第一次尝试的错误答案：class Solution {
+public:
+    bool lemonadeChange(vector<int>& bills) {
+        int cur_answer=0;
+        for(int i=0;i<bills.size();i++)
+        {
+            if(bills[i]==5)
+            {
+                cur_answer+=bills[i];
+            }
+            if(bills[i]==10)
+            {
+                if(cur_answer-bills[i]<0)
+                {
+                    return false;
+                }
+                else if(cur_answer-bills[i]>=0)
+                {
+                    cur_answer+=bills[i];
+                    cur_answer=cur_answer-5;
+                }
+            }
+             if(bills[i]==20)
+            {
+                if(cur_answer-bills[i]<0)
+                {
+                    return false;
+                }
+                else if(cur_answer-bills[i]>=0)
+                {
+                    cur_answer+=bills[i];
+                    cur_answer=cur_answer-15;
+                }
+            }
+        }
+        if(cur_answer<0)
+        {
+            return false;
+        }
+        return true;
+    }
+};
+本题需要维护的是5块，10块的钱的数量，够不够找零的，如果够，先用大面额的找
+4、406.根据身高重建队列
+（1）题目链接：https://leetcode.cn/problems/queue-reconstruction-by-height/description/
+（2）if(a[0]==b[0]) { return a[1]<b[1];}代表的是:如果 a 和 b 的第一个元素相等，则比较它们的第二个元素。a[1] < b[1] 表示如果 a 的第二个元素小于 b 的第二个元素，
+则返回 true，否则返回 false。这意味着在第一个元素相等的情况下，按照第二个元素的升序排列。
+（3）class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        sort(people.begin(),people.end(),[](vector<int>&a,vector<int>&b){
+            if(a[0]==b[0]) { return a[1]<b[1];} 
+            return a[0]>b[0];});
+        vector<vector<int>>que;
+        for(int i=0;i<people.size();i++)
+        {
+            int position=people[i][1];
+            que.insert(que.begin()+position,people[i]);
+        }
+        return que;
+    }
+};
+（4）list执行插入
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        sort(people.begin(),people.end(),[](vector<int>&a,vector<int>&b){
+            if(a[0]==b[0]) { return a[1]<b[1];} 
+            return a[0]>b[0];});
+        list<vector<int>>que;
+        for(int i=0;i<people.size();i++)
+        {
+            int position=people[i][1];
+            list<vector<int>>::iterator it=que.begin();
+            while(position--)
+            {
+                it++;
+            }
+            que.insert(it,people[i]);
+        }
+        return vector<vector<int>>(que.begin(),que.end());
+    }
+};
