@@ -23,5 +23,65 @@ public:
     }
 };
 3、376. 摆动序列
-（1）题目链接：
-（2）
+（1）题目链接：https://leetcode.cn/problems/wiggle-subsequence/description/
+（2）class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        if(nums.size()<2) return nums.size();
+        int up=1,down=1;
+        for(int i=1;i<nums.size();i++)
+        {
+            if(nums[i]>nums[i-1])
+            {
+                up=down+1;
+            }
+            else if(nums[i]<nums[i-1])
+            {
+                down=up+1;
+            }
+        }
+        return max(up,down);
+    }
+};
+4、53. 最大子序和
+（1）题目链接：https://leetcode.cn/problems/maximum-subarray/description/
+（2）暴力求解
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int result = INT32_MIN;
+        int count = 0;
+        for (int i = 0; i < nums.size(); i++) { // 设置起始位置
+            count = 0;
+            for (int j = i; j < nums.size(); j++) { // 每次从起始位置i开始遍历寻找最大值
+                count += nums[j];
+                result = count > result ? count : result;
+            }
+        }
+        return result;
+    }
+};
+问题点：两层嵌套for循环，会超时
+（3）贪心想法：既然是计算最大和，表明如果当前count计算时，出现了负数，直接舍弃当前count，从下一个i开始从新计算和。同时如果当前count大于res，将res进行重新赋值
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int res=INT_MIN;
+        int count=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            count+=nums[i];
+            if(count>res)
+            {
+                res=count;
+            }
+            if(count<=0)
+            {
+               count=0;
+            }
+        }
+        return res;
+    }
+};
+count 记录的是当前子数组和，当 count 小于或等于 0 时，重置 count 是因为负数或零不会对未来可能的子数组和产生正面贡献，反而可能使和变小。
+通过重置 count，算法能够从下一个正数开始重新计算子数组和，从而找到最大的子数组和
