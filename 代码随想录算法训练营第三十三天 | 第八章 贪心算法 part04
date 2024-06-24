@@ -1,0 +1,83 @@
+452. 用最少数量的箭引爆气球
+435. 无重叠区间 
+763.划分字母区间 
+
+1、452. 用最少数量的箭引爆气球
+（1）题目链接：https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/description/
+（2）问题转换---求最小的不重叠区间，与区间问题不同的是，本题在边缘问题的处理上，边缘相等也算重合
+（3）class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        if(points.size()==0) return 0;
+        sort(points.begin(),points.end(),[](vector<int>&a,vector<int>&b){return a[1]<b[1];});
+        int count=1;
+        int x_end=points[0][1];
+        for(vector<int> interval:points)
+        {
+            int start=interval[0];
+            if(start>x_end)
+            {
+                count++;
+                x_end=interval[1];
+            }
+        }
+        return count;
+    }
+};
+2、435. 无重叠区间 
+（1）题目链接：https://leetcode.cn/problems/non-overlapping-intervals/description/
+（2）class Solution {
+public:
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        int n=intervals.size();
+        return n-removeIntervels(intervals);
+    }
+    int removeIntervels(vector<vector<int>>&nums)
+    {
+        if(nums.size()==0) return 0;
+        sort(nums.begin(),nums.end(),[](vector<int>&a,vector<int>&b){ return a[1]<b[1]; });
+        int count=1;
+        int x_end=nums[0][1];
+        for(vector<int> interval:nums)
+        {
+            int start=interval[0];
+            if(start>=x_end)
+            {
+                count++;
+                x_end=interval[1];
+            }
+        }
+        return count;
+    }
+};
+3、763.划分字母区间
+（1）题目链接：https://leetcode.cn/problems/partition-labels/description/
+（2）没思路，学习题解
+（3）重点：left = i + 1; left更新为下一个代码块
+          hash[s[i]-'a']=i;  用hash保存当前字符串中字符出现的最远距离
+          right=max(right,hash[s[i]-'a']);  将右边界更新当前最远的距离，如果
+具体代码：
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        int hash[27]={0};
+        for(int i=0;i<s.size();i++)
+        {
+            hash[s[i]-'a']=i;
+        }
+        int right=0;
+        int left=0;
+        vector<int>res;
+        for(int i=0;i<s.size();i++)
+        {
+            right=max(right,hash[s[i]-'a']);
+            if(right==i)
+            {
+                res.push_back(right-left+1);
+                left=i+1;
+            }
+        }
+        return res;
+    }
+};
+（2）
