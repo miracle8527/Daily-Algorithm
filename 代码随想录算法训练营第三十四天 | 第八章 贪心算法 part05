@@ -2,4 +2,54 @@
 738.单调递增的数字
 968.监控二叉树 （可跳过）
 总结
-1、
+1、56. 合并区间 
+（1）题目链接：https://leetcode.cn/problems/merge-intervals/description/
+（2）class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int>>res;
+        if(intervals.empty())
+        {
+            return {};
+        }
+        sort(intervals.begin(),intervals.end(),[](vector<int>&a,vector<int>&b){return a[0]<b[0];});
+        res.push_back(intervals[0]);
+        for(int i=1;i<intervals.size();i++)
+        {
+            if(intervals[i][0]<=res.back()[1])
+            {
+                res.back()[1]=max(res.back()[1],intervals[i][1]);
+            }
+            else 
+            {
+                res.push_back(intervals[i]);
+            }
+        }
+        return res;
+    }
+};
+2、738.单调递增的数字
+（1）题目链接：
+（2）问题1：如何计算一个数字N的有多少位数？参考：转换成string类型，进行计算后再利用stoi转换成数字
+（3）问题2：从右向左遍历，i-1仍是是i的左边的值。虽然遍历方向是从右向左，但数组（或字符串）本身的索引顺序仍是从左到右，所以 i-1 是 i 左边的值。
+class Solution {
+public:
+    int monotoneIncreasingDigits(int n) {
+        string strNum=to_string(n);
+        int flag=strNum.size();
+        for(int i=strNum.size()-1;i>0;i--)
+        {
+            if(strNum[i-1]>strNum[i])
+            {
+                flag=i;
+                strNum[i-1]--;
+            }
+        }
+        for(int i=flag;i<strNum.size();i++)
+        {
+            strNum[i]='9';
+        }
+        return stoi(strNum);
+    }
+};
+3、贪心总结：https://programmercarl.com/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93%E7%AF%87.html
