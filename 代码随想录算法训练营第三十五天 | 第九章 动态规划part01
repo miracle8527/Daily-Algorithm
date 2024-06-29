@@ -1,0 +1,56 @@
+理论基础
+509. 斐波那契数 
+70. 爬楼梯   
+746. 使用最小花费爬楼梯 
+1、509. 斐波那契数 
+（1）题目链接：https://leetcode.cn/problems/fibonacci-number/description/
+（2）class Solution {
+public:
+    int fib(int n) {
+        vector<int>memo(n+1,0);
+        return dp(memo,n);
+    }
+    int dp(vector<int>&memo,int n)
+    {
+        if(n==0||n==1) return n;
+        if(memo[n]!=0) return memo[n];
+        else memo[n]=dp(memo,n-1)+dp(memo,n-2) ;
+        return memo[n];
+    }
+};
+2、70. 爬楼梯  
+（1）题目链接：https://leetcode.cn/problems/climbing-stairs/description/
+（2）class Solution {
+public:
+     vector<int>memo;
+    int climbStairs(int n) {
+        memo.resize(n+1,0);
+        return dp(n);
+    }
+    int dp(int n)
+    {
+        if(n==1||n==2) return n;
+        if(memo[n]>0)
+        {
+            return memo[n];
+        }
+        memo[n]=dp(n-1)+dp(n-2);
+        return memo[n];
+    }
+};
+3、746. 使用最小花费爬楼梯 
+（1）题目链接：https://leetcode.cn/problems/min-cost-climbing-stairs/description/
+（2）class Solution {
+public:
+
+    int minCostClimbingStairs(vector<int>& cost) {
+     vector<int>dp(cost.size()+1);
+     dp[0]=0;
+     dp[1]=0;
+     for(int i=2;i<=cost.size();i++)
+     {
+        dp[i]=min(dp[i-1]+cost[i-1],dp[i-2]+cost[i-2]);
+     }
+     return dp[cost.size()];
+    }
+};
